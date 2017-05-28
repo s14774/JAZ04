@@ -90,6 +90,23 @@ public class CategoryResources {
 		return result.getProducts();
 	}
 	
+	@GET
+	@Path("/products")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Product> getAllProducts(){
+		return em.createNamedQuery("product.all",Product.class).getResultList();
+	}
+
+	@GET
+	@Path("/products/price/{min}/{max}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Product> getProductsWithPrice(@PathParam("min") int min, @PathParam("max") int max){
+		return em.createNamedQuery("product.price",Product.class)
+				.setParameter("productMinPrice", min)
+				.setParameter("productMaxPrice", max)
+				.getResultList();
+	}
+	
 	@POST
 	@Path("/{id}/products")
 	@Produces(MediaType.APPLICATION_JSON)

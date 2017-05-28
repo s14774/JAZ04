@@ -5,6 +5,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @Entity
+@NamedQueries({
+	@NamedQuery(name="product.all",query = "SELECT p FROM Product p"),
+	@NamedQuery(name="product.id", query = "FROM Product p WHERE p.id=:productId"),
+	@NamedQuery(name="product.price", query = "FROM Product p WHERE p.price <= :productMaxPrice AND p.price >= :productMinPrice")
+
+})
 public class Product {
 
 	@Id
@@ -12,6 +18,7 @@ public class Product {
 	private int id;
 	private String name;
 	private Float price;
+	
 	
 	@ManyToOne
 	private Category Category;

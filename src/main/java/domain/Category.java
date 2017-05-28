@@ -9,7 +9,7 @@ import java.util.List;
 @XmlRootElement
 @Entity
 @NamedQueries({
-	@NamedQuery(name="category.all",query = "SELECT c FROM Category p"),
+	@NamedQuery(name="category.all",query = "SELECT c FROM Category c"),
 	@NamedQuery(name="category.id", query = "FROM Category c WHERE c.id=:categoryId")
 })
 public class Category {
@@ -17,6 +17,7 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@Column(unique = true)
 	private String name;
 	private List<Product> products = new ArrayList<>();
 	
