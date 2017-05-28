@@ -1,7 +1,11 @@
 package domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
 @Entity
@@ -9,7 +13,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@NamedQuery(name="product.all",query = "SELECT p FROM Product p"),
 	@NamedQuery(name="product.id", query = "FROM Product p WHERE p.id=:productId"),
 	@NamedQuery(name="product.price", query = "FROM Product p WHERE p.price <= :productMaxPrice AND p.price >= :productMinPrice")
-
 })
 public class Product {
 
@@ -19,6 +22,7 @@ public class Product {
 	private String name;
 	private Float price;
 	
+	private List<Comment> comments = new ArrayList<>();	
 	
 	@ManyToOne
 	private Category Category;
@@ -50,4 +54,14 @@ public class Product {
 	public void setCategory(Category Category) {
 		this.Category = Category;
 	}
+	
+	@XmlTransient
+	@OneToMany(mappedBy = "product")
+	public List<Comment> getComments() {
+		return comments;
+	}
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+	
 }

@@ -2,6 +2,7 @@ package rest;
 
 import domain.Category;
 import domain.Product;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,8 +14,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.util.List;
 
 @Path("/categories")
@@ -96,11 +99,47 @@ public class CategoryResources {
 	public List<Product> getAllProducts(){
 		return em.createNamedQuery("product.all",Product.class).getResultList();
 	}
+	
+	/*@GET
+	@Path("/products/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Product> getProductById(){
+		return em.createNamedQuery("product.all",Product.class).getResultList();
+	}*/
+	/*@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response get(@PathParam("id") int id){
+		Category result = em.createNamedQuery("category.id",Category.class)
+				.setParameter("categoryId", id)
+				.getSingleResult();
+		if(result==null){
+			return Response.status(404).build();
+		}
+		return Response.ok(result).build();
+	}*/
+	
+	@PUT
+	@Path("/products/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response Productupdate(@PathParam("id") int id, Product p){
+		Product result = em.createNamedQuery("product.id",Product.class)
+				.setParameter("productId", id)
+				.getSingleResult();
+		if(result==null){
+			return Response.status(404).build();
+		}
+		result.setName(p.getName());
+		result.setPrice(p.getPrice());
+		result.setCategory(p.getCategory());
+		em.persist(result);
+		return Response.ok().build();
+	}
 
 	@GET
-	@Path("/products/price/{min}/{max}")
+	@Path("/products/price")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Product> getProductsWithPrice(@PathParam("min") int min, @PathParam("max") int max){
+	public List<Product> getProductsWithPrice(@QueryParam("min") int min, @QueryParam("max") int max){
 		return em.createNamedQuery("product.price",Product.class)
 				.setParameter("productMinPrice", min)
 				.setParameter("productMaxPrice", max)
